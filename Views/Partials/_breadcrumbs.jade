@@ -1,0 +1,23 @@
+div.breadcrumbs
+	- var actionExists = Action && Action != 'Index';
+	- var controllerExists = Controller != "Home";
+	ul.breadcrumb
+		li
+			if (!controllerExists && !actionExists)
+				| Home
+			else
+				a(href="/Home") Home
+		if (controllerExists)
+			li
+				span.divider
+					/
+			li
+				if (!actionExists)
+					= Controller
+				else
+					a(href="/#{Controller}")= Controller
+		if (actionExists)
+			li
+				span.divider
+					/
+			li.active= Action

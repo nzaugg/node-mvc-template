@@ -1,0 +1,19 @@
+!!! 5
+html
+	head
+		title My MVC App
+		link(type="text/css", rel="stylesheet", href="/public/css/site.css")
+		block styles
+		block head
+	body
+		div.container
+			header
+				block header
+			div.container
+				block content
+			footer
+				hr
+				block footer
+				include _footer
+		block scripts
+		

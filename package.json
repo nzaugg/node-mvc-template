@@ -8,7 +8,14 @@
 	"dependencies": {
 		"express": "4.x",
 		"mongoose": "3.8.x",
-		"jade": "1.3.x"
+		"jade": "1.3.x",
+
+		"karma": "*",
+		"karma-jasmine": "*",
+		"karma-requirejs": "*",
+		"karma-chrome-launcher": "*",
+		"karma-firefox-launcher": "*",
+		"karma-ie-launcher": "*"
 	},
 	"author": "My Name"
 }
