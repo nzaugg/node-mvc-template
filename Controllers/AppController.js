@@ -1,5 +1,4 @@
-var fs = require('fs'),
-	extensions = require('../public/JS/Modules/ExtensionsModule');
+var fs = require('fs');
 
 module.exports = function(app)
 {
@@ -29,7 +28,7 @@ function router(req, res, next)
 		'Method: ' + (method || '"NO METHOD"'));
 
 	// set the default action
-	var fn = 'index';
+	var fn = 'Index';
 
 	// default route
 	if(controller.length == 0)
@@ -50,13 +49,13 @@ function router(req, res, next)
 		switch(method)
 		{
 			case 'get':
-				fn = 'index';
+				fn = 'Index';
 				break;
 			case 'post':
-				fn = 'create';
+				fn = 'Create';
 				break;
 			case 'delete':
-				fn = 'destroyAll';
+				fn = 'DestroyAll';
 				break;
 		}
 	}
@@ -68,19 +67,20 @@ function router(req, res, next)
 				if(isNaN(action))
 					fn = action;
 				else
-					fn = 'show';
+					fn = 'Show';
 				break;
 			case 'put':
-				fn = 'edit';
+				fn = 'Edit';
 				break;
 			case 'delete':
-				fn = 'destroy';
+				fn = 'Destroy';
 				break;
 		}
 	}
 
-	fn = fn.Capitalize();
-	var controllerPath = './' + controller.Capitalize() + 'Controller';
+	fn = Capitalize(fn);
+	locals.DebugLog("FN: " + fn);
+	var controllerPath = './' + Capitalize(controller) + 'Controller';
 	locals.DebugLog('Looking up ' + controllerPath + ' for ' + fn);
 	try
 	{
@@ -95,4 +95,15 @@ function router(req, res, next)
 		console.log(ex);
 		res.render('404');
 	}
+}
+
+function Capitalize(str)
+{
+	if(str == null || str == undefined)
+		return str + "";
+
+	if(!str.substr || !str.trim || str.trim().length <= 0)
+		return str + "";
+
+	return str.substr(0, 1).toUpperCase() + str.substr(1);
 }
