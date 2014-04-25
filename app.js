@@ -28,30 +28,6 @@ exports.boot = function(params)
 	return app;
 }
 
-function RenderPage(path, options, fn)
-{
-	locals.DebugLog(path);
-	var key = path + ':string';
-	if(typeof options == 'function')
-	{
-		fn = options;
-		options = {};
-	}
-
-	try
-	{
-		var str = options.cache
-					? exports.cache[key] || (exports.cache[key] = fs.readFileSync(path, 'utf8'))
-					: fs.readFileSync(path, 'utf8');
-		fn(null, str);
-	}
-	catch (err)
-	{
-		console.log("couldn't render page " + path);
-		fn(err);
-	}
-}
-
 // Setup any server configurations
 function BootApplication(app)
 {
@@ -60,8 +36,8 @@ function BootApplication(app)
 	app.use(serveStatic(path.join(__dirname, 'public')));
 
 	app.set('views', __dirname + '/Views');
-	app.set('view engine', 'html');
-	app.engine('html', RenderPage);
+	app.set('view engine', 'jade');
+	app.engine('jade', require('jade').__express);
 
 	app.use(favicon(__dirname + '/public/favicon.ico'));
 	app.use(morgan());
