@@ -3,6 +3,14 @@
  */
 
 var express = require('express')
+	, bodyParser = require('body-parser')
+	, cookieParser = require('cookie-parser')
+	, methodOverride = require('method-override')
+	, session = require('express-session')
+	, favicon = require('static-favicon')
+	, serveStatic = require('serve-static')
+	, morgan = require('morgan')
+
 	, http = require('http')
 	, path = require('path')
 	, mongoose = require('mongoose')
@@ -49,39 +57,32 @@ function BootApplication(app)
 {
 	// all environments
 	app.set('port', process.env.PORT || 3000);
-	app.use("/public", express.static(path.join(__dirname, 'public')));
+	app.use(serveStatic(path.join(__dirname, 'public')));
 
 	app.set('views', __dirname + '/Views');
 	app.set('view engine', 'html');
 	app.engine('html', RenderPage);
 
-	app.use(express.favicon());
-	app.use(express.logger('dev'));
-	app.use(express.bodyParser());
-	app.use(express.methodOverride());
+	app.use(favicon(__dirname + '/public/favicon.ico'));
+	app.use(morgan());
+	app.use(bodyParser());
+	app.use(methodOverride());
 
-	app.use(express.cookieParser('legacybass'));
-	app.use(express.session());
+	app.use(cookieParser('my secret string'));
+	app.use(session({ secret: 'my secret key', key: 'chocolatechip', cookie: { secure: true }}));
 
-	app.configure('development', function()
+	if(app.get('env') == 'development')
 	{
-		app.set('db-uri', 'mongodb://localhost/jeopardy-dev');
-		app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-	});
-
-	app.configure('production', function()
+		app.set('db-uri', 'mongodb://localhost/MyApp-dev');
+	}
+	else if(app.get('env') == 'production')
 	{
-		app.set('db-uri', 'mongodb://jeopardy:T!k^BGFss5kD@ds053178.mongolab.com:53178/heroku_app19032439');
-		app.use(express.errorHandler({ dumpExceptions: false, showStack: false }));
-	});
-
-	app.configure('test', function()
+		app.set('db-uri', 'mongodb://localhost/MyApp');
+	}
+	else if(app.get('env') == 'testing')
 	{
-		app.set('db-uri', 'mongodb://localhost/jeopardy-test');
-		app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-	});
-
-	app.use(app.router);
+		app.set('db-uri', 'mongodb://localhost/MyApp-test');
+	}
 
 	global.locals = { };
 
@@ -133,15 +134,8 @@ function BootModels(app)
 	});
 }
 
-// Load the socket configurations and handlers
-function BootSockets(server)
-{
-	require(__dirname + '/Controllers/SocketController')(server);
-}
-
 var app = exports.boot();
 var server = http.createServer(app);
 server.listen(app.get('port'), function(){
 	console.log('Express server listening on port %d.', app.get('port'));
 });
-BootSockets(server);
