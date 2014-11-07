@@ -60,5 +60,4 @@ UserSchema.methods.ComparePassword = function(candidatePassword, callback)
 	})
 }
 
-mongoose.model('User', UserSchema);
 module.exports = UserSchema;
