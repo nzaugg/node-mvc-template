@@ -59,23 +59,6 @@ function BootApplication(app)
 	{
 		app.set('db-uri', 'mongodb://localhost/MyApp-test');
 	}
-
-	global.locals = { };
-
-	if('production' == app.get('env'))
-	{
-		global.locals.DebugLog = function() { };
-	}
-	else
-	{
-		global.locals.DebugLog = function (str)
-		{
-			if(arguments.caller)
-				str = arguments.caller + " says: " + str;
-
-			console.log(str);
-		}
-	}
 }
 
 // Load the controllers into the routing domain
