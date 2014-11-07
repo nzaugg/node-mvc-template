@@ -17,15 +17,10 @@ module.exports = function(app)
 
 function router(req, res, next)
 {
-	var controller = req.params.controller ? req.params.controller : '';
-	var action = req.params.action ? req.params.action : '';
-	var id = req.params.id ? req.params.id : '';
+	var controller = req.params.controller || '';
+	var action = req.params.action || '';
+	var id = req.params.id || '';
 	var method = req.method.toLowerCase();
-
-	locals.DebugLog('Controller: ' + (controller || '"NO CONTROLLER"') + '\n' +
-		'Action: ' + (action || '"NO ACTION"') + '\n' +
-		'Id: ' + (id || '"NO ID"') + '\n' +
-		'Method: ' + (method || '"NO METHOD"'));
 
 	// set the default action
 	var fn = 'Index';
